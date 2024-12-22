@@ -70,8 +70,18 @@ internal enum OKRouter {
 }
 
 extension OKRouter {
-    func asURLRequest(with baseURL: URL) throws -> URLRequest {
-        let url = baseURL.appendingPathComponent(path)
+    func asURLRequest(with baseURL: URL, authToken: String? = nil) throws -> URLRequest {
+        let config = OKRouterConfig(baseURL: baseURL, authToken: authToken)
+        return try asURLRequest(with: config)
+    }
+    
+    func asURLRequest(with config: OKRouterConfig) throws -> URLRequest {
+        let url = config.baseURL.appendingPathComponent(path)
+        
+        var headers = self.headers
+        if let authToken = config.authToken, !authToken.isEmpty {
+            headers["Authorization"] = "Bearer \(authToken)"
+        }
         
         var request = URLRequest(url: url)
         request.httpMethod = method
@@ -97,5 +107,15 @@ extension OKRouter {
         }
         
         return request
+    }
+}
+
+struct OKRouterConfig {
+    let baseURL: URL
+    let authToken: String?
+    
+    init(baseURL: URL, authToken: String? = nil) {
+        self.baseURL = baseURL
+        self.authToken = authToken
     }
 }

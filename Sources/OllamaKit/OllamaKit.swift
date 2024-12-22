@@ -12,6 +12,7 @@ public struct OllamaKit: Sendable {
     var router: OKRouter.Type
     var decoder: JSONDecoder = .default
     var baseURL: URL
+    var authToken: String?
 
     /// Initializes a new instance of `OllamaKit` with the default base URL for the Ollama API.
     ///
@@ -32,9 +33,14 @@ public struct OllamaKit: Sendable {
     /// ```
     ///
     /// - Parameter baseURL: The base URL to use for API requests.
-    public init(baseURL: URL) {
+    public init(baseURL: URL, authToken: String? = nil) {
         let router = OKRouter.self
         self.router = router
         self.baseURL = baseURL
+        self.authToken = authToken
+    }
+    
+    func routerConfig() -> OKRouterConfig {
+        .init(baseURL: baseURL, authToken: authToken)
     }
 }
