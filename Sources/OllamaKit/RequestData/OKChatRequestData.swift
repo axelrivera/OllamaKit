@@ -31,7 +31,7 @@ public struct OKChatRequestData: Sendable {
     }
     
     /// A structure that represents a single message in the chat request.
-    public struct Message: Encodable, Sendable {
+    public struct Message: Hashable, Equatable, Encodable, Sendable {
         /// A ``Role`` value indicating the sender of the message (system, assistant, user).
         public let role: Role
         
